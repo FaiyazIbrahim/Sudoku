@@ -151,7 +151,7 @@ public class CellGenerator : MonoBehaviour
                 Cell cell = Instantiate(m_Cell, transform);
                 int value = _sudokuGrid[row, col];
                 cell.SetCellTextVisual(value);
-                cell.TargetValue = value;
+                cell.SetTargetValue(value);
                 cell.SetCellController(m_CellController);
                 cell.gameObject.name = value.ToString();
                 m_CellController.AddToCellList(row, col, cell);
