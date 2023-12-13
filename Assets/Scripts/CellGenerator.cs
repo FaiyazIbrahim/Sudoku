@@ -7,20 +7,19 @@ public class CellGenerator : MonoBehaviour
     [SerializeField] private Cell m_Cell;
     [SerializeField] private CellController m_CellController;
 
-    private int[,] sudokuGrid = new int[9, 9];
+    private int[,] _sudokuGrid = new int[9, 9];
 
-    void Start()
+    private void Start()
     {
         GenerateSudoku();
         PrintSudoku();
     }
 
-    void GenerateSudoku()
+    private void GenerateSudoku()
     {
         if (SolveSudoku())
         {
-            // Successfully generated a solved Sudoku puzzle, now remove some numbers to make it a puzzle
-            RemoveNumbers();
+            //RemoveNumbers();
         }
         else
         {
@@ -28,13 +27,12 @@ public class CellGenerator : MonoBehaviour
         }
     }
 
-    bool SolveSudoku()
+    private bool SolveSudoku()
     {
         int row, col;
 
         if (!FindEmptyCell(out row, out col))
         {
-            // No empty cells, puzzle is solved
             return true;
         }
 
@@ -45,8 +43,8 @@ public class CellGenerator : MonoBehaviour
         {
             if (IsSafe(row, col, numbers[num - 1]))
             {
-                sudokuGrid[row, col] = numbers[num - 1];
-                Debug.Log(numbers[num - 1]);
+                _sudokuGrid[row, col] = numbers[num - 1];
+                
 
 
 
@@ -55,45 +53,40 @@ public class CellGenerator : MonoBehaviour
                     return true;
                 }
 
-                // If placing num at (row, col) doesn't lead to a solution, backtrack
-                sudokuGrid[row, col] = 0;
+                _sudokuGrid[row, col] = 0;
             }
         }
 
-        // No number can be placed at this cell
         return false;
     }
 
-    bool FindEmptyCell(out int row, out int col)
+    private bool FindEmptyCell(out int row, out int col)
     {
         for (row = 0; row < 9; row++)
         {
             for (col = 0; col < 9; col++)
             {
-                if (sudokuGrid[row, col] == 0)
+                if (_sudokuGrid[row, col] == 0)
                 {
-                    // Found an empty cell
                     return true;
                 }
             }
         }
 
-        // No empty cell found
         row = col = -1;
         return false;
     }
 
-    bool IsSafe(int row, int col, int num)
+    private bool IsSafe(int row, int col, int num)
     {
-        // Check if 'num' is not already present in the current row, column, and 3x3 subgrid
         return !UsedInRow(row, num) && !UsedInCol(col, num) && !UsedInBox(row - row % 3, col - col % 3, num);
     }
 
-    bool UsedInRow(int row, int num)
+    private bool UsedInRow(int row, int num)
     {
         for (int col = 0; col < 9; col++)
         {
-            if (sudokuGrid[row, col] == num)
+            if (_sudokuGrid[row, col] == num)
             {
                 return true;
             }
@@ -101,11 +94,11 @@ public class CellGenerator : MonoBehaviour
         return false;
     }
 
-    bool UsedInCol(int col, int num)
+    private bool UsedInCol(int col, int num)
     {
         for (int row = 0; row < 9; row++)
         {
-            if (sudokuGrid[row, col] == num)
+            if (_sudokuGrid[row, col] == num)
             {
                 return true;
             }
@@ -113,13 +106,13 @@ public class CellGenerator : MonoBehaviour
         return false;
     }
 
-    bool UsedInBox(int boxStartRow, int boxStartCol, int num)
+    private bool UsedInBox(int boxStartRow, int boxStartCol, int num)
     {
         for (int row = 0; row < 3; row++)
         {
             for (int col = 0; col < 3; col++)
             {
-                if (sudokuGrid[boxStartRow + row, boxStartCol + col] == num)
+                if (_sudokuGrid[boxStartRow + row, boxStartCol + col] == num)
                 {
                     return true;
                 }
@@ -128,9 +121,8 @@ public class CellGenerator : MonoBehaviour
         return false;
     }
 
-    void RemoveNumbers()
+    private void RemoveNumbers()
     {
-        // Specify the number of cells to be removed (adjust this based on difficulty level)
         int cellsToRemove = Random.Range(40, 55);
 
         for (int i = 0; i < cellsToRemove; i++)
@@ -138,42 +130,37 @@ public class CellGenerator : MonoBehaviour
             int row = Random.Range(0, 9);
             int col = Random.Range(0, 9);
 
-            // Ensure the cell is not already empty
-            while (sudokuGrid[row, col] == 0)
+
+            while (_sudokuGrid[row, col] == 0)
             {
                 row = Random.Range(0, 9);
                 col = Random.Range(0, 9);
             }
 
-            sudokuGrid[row, col] = 0;
+            _sudokuGrid[row, col] = 0;
+            m_CellController.GetCell(row, col).SetCellTextVisual(0 , true);
         }
     }
 
-    void PrintSudoku()
+    private void PrintSudoku()
     {
         for (int row = 0; row < 9; row++)
         {
             for (int col = 0; col < 9; col++)
             {
                 Cell cell = Instantiate(m_Cell, transform);
-                int value = sudokuGrid[row, col];
-                cell.SetCellText(value == 0? " " : value.ToString());
+                int value = _sudokuGrid[row, col];
+                cell.SetCellTextVisual(value);
+                cell.TargetValue = value;
+                cell.SetCellController(m_CellController);
+                cell.gameObject.name = value.ToString();
+                m_CellController.AddToCellList(row, col, cell);
             }
         }
-
+        RemoveNumbers();
     }
 
-
-    //void CheckColumn(int columnIndex)
-    //{
-    //    for (int row = 0; row < 9; row++) //sudokuGrid.GetLength(0)
-    //    {
-    //        int value = sudokuGrid[row, columnIndex];
-    //        Debug.Log($"myArray[{row},{columnIndex}] = {value}");
-    //    }
-    //}
-
-    private static void Shuffle<T>(List<T> list)
+    private void Shuffle<T>(List<T> list)
     {
         int n = list.Count;
         while (n > 1)
