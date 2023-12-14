@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
+
 
 public class CellGenerator : MonoBehaviour
 {
     [SerializeField] private Cell m_Cell;
     [SerializeField] private CellController m_CellController;
+    [SerializeField] private GridLayoutGroup m_GridLayoutGroup;
 
     private int[,] _sudokuGrid = new int[9, 9];
 
@@ -13,6 +17,7 @@ public class CellGenerator : MonoBehaviour
     {
         GenerateSudoku();
         PrintSudoku();
+        
     }
 
     private void GenerateSudoku()
@@ -54,6 +59,8 @@ public class CellGenerator : MonoBehaviour
                 }
 
                 _sudokuGrid[row, col] = 0;
+
+                
             }
         }
 
@@ -157,8 +164,16 @@ public class CellGenerator : MonoBehaviour
                 m_CellController.AddToCellList(row, col, cell);
             }
         }
+        
         RemoveNumbers();
+
+        DOVirtual.DelayedCall(0.1f, delegate
+        {
+            m_GridLayoutGroup.enabled = false;
+            DetectSubgrids();
+        });
     }
+
 
     private void Shuffle<T>(List<T> list)
     {
@@ -170,6 +185,49 @@ public class CellGenerator : MonoBehaviour
             T temp = list[k];
             list[k] = list[n];
             list[n] = temp;
+        }
+    }
+
+    void DetectSubgrids()
+    {
+        
+        for (int startRow = 0; startRow < 9; startRow += 3)
+        {
+            for (int startCol = 0; startCol < 9; startCol += 3)
+            {
+                ProcessSubgrid(startRow, startCol);
+            }
+        }
+    }
+
+
+    public RectTransform m_BgImage;
+    void ProcessSubgrid(int startRow, int startCol)
+    {
+        Debug.Log("Row: " + startRow + ", Col: " + startCol);
+        int i = 0;
+        for (int row = startRow; row < startRow + 3; row++)
+        {
+            for (int col = startCol; col < startCol + 3; col++)
+            {
+                i++;
+
+                if(i == 5)
+                {
+                    // Create each cell image
+                    RectTransform cellImage = Instantiate(m_BgImage, transform);
+                    //cellImage.transform.SetParent(transform);
+
+                    // Set the size and position of each cell image
+                    //RectTransform cellRect = cellImage.GetComponent<RectTransform>();
+                    //cellRect.sizeDelta = new Vector2(100, 100);  // Adjust the size as needed
+                    Vector3 pos = m_CellController.GetCell(row, col).GetComponent<RectTransform>().anchoredPosition;
+                    cellImage.anchoredPosition = new Vector3(pos.x, pos.y, -1);  // Adjust the position as needed
+                    Debug.Log(m_CellController.GetCell(row, col).gameObject.name + "  " + pos);
+                }
+
+                
+            }
         }
     }
 

@@ -489,6 +489,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Cell: {fileID: 623653692060322330, guid: f8fd0f0cbd4b12d45b17ec9efdd65359, type: 3}
   m_CellController: {fileID: 637023825}
+  m_GridLayoutGroup: {fileID: 267350959}
+  parent: {fileID: 0}
+  m_BgImage: {fileID: 2564665245874293518, guid: bc11a4680b7109e499e6371eab5ba207, type: 3}
 --- !u!1001 &303784464
 PrefabInstance:
   m_ObjectHideFlags: 0
