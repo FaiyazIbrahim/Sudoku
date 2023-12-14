@@ -79,7 +79,7 @@ public class CellController : MonoBehaviour
         {
             if(c.GetCurrentValue() == value)
             {
-                c.SetAsHighlited(true);
+                c.SetAsHighlited(true, true);
             }
             else
             {

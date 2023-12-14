@@ -14,6 +14,8 @@ public class Cell : MonoBehaviour
     [SerializeField] private Color m_SelectedColor;
     [SerializeField] private Color m_DeselectedColor;
     [SerializeField] private Color m_MissMatchedColor;
+    [SerializeField] private float m_PopDuration;
+    [SerializeField] private Ease m_PopEase;
 
     private CellController _cellController;
     private int _targetValue;
@@ -41,17 +43,13 @@ public class Cell : MonoBehaviour
         _cellController = cellController;
     }
 
-    public void SetAsHighlited(bool value)
+    public void SetAsHighlited(bool value, bool canPop = false)
     {
         m_Button.image.color = value ? m_SelectedColor : m_DeselectedColor;
+        if(canPop) PopEffect();
     }
 
     public void SetTargetValue(int value) => _targetValue = value;
-
-    //public void SetCurrentValue(int value)
-    //{
-    //    _currentValue = value;
-    //}
 
     public int GetCurrentValue() => _currentValue;
 
@@ -60,6 +58,13 @@ public class Cell : MonoBehaviour
         if(_targetValue != _currentValue && _currentValue != 0)
         {
             m_Button.image.color = m_MissMatchedColor;
+            PopEffect();
         }
+    }
+
+    private void PopEffect()
+    {
+        transform.localScale = Vector3.one * 0.6f;
+        transform.DOScale(Vector3.one, m_PopDuration).SetEase(m_PopEase);
     }
 }

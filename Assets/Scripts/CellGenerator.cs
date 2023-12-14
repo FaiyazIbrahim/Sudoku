@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Threading.Tasks;
 
 
 public class CellGenerator : MonoBehaviour
@@ -10,25 +11,23 @@ public class CellGenerator : MonoBehaviour
     [SerializeField] private Cell m_Cell;
     [SerializeField] private CellController m_CellController;
     [SerializeField] private GridLayoutGroup m_GridLayoutGroup;
+    [SerializeField] private RectTransform m_GridBgImage;
+    [SerializeField] private Transform m_GridBgImageParentTransform;
+
 
     private int[,] _sudokuGrid = new int[9, 9];
 
     private void Start()
     {
-        GenerateSudoku();
-        PrintSudoku();
-        
+        GenerateSudokuValues();
+        GenerateSudokuCells();
     }
 
-    private void GenerateSudoku()
+    private void GenerateSudokuValues()
     {
         if (SolveSudoku())
         {
-            //RemoveNumbers();
-        }
-        else
-        {
-            Debug.LogError("Failed to generate Sudoku puzzle. Retry or adjust the algorithm.");
+            Debug.Log("Sudoku Initialized");
         }
     }
 
@@ -149,7 +148,7 @@ public class CellGenerator : MonoBehaviour
         }
     }
 
-    private void PrintSudoku()
+    private void GenerateSudokuCells()
     {
         for (int row = 0; row < 9; row++)
         {
@@ -195,16 +194,15 @@ public class CellGenerator : MonoBehaviour
         {
             for (int startCol = 0; startCol < 9; startCol += 3)
             {
-                ProcessSubgrid(startRow, startCol);
+                GenerateGridBgImage(startRow, startCol);
             }
         }
     }
 
-
-    public RectTransform m_BgImage;
-    void ProcessSubgrid(int startRow, int startCol)
+    
+    private async void GenerateGridBgImage(int startRow, int startCol)
     {
-        Debug.Log("Row: " + startRow + ", Col: " + startCol);
+        //Debug.Log("Row: " + startRow + ", Col: " + startCol);
         int i = 0;
         for (int row = startRow; row < startRow + 3; row++)
         {
@@ -214,21 +212,17 @@ public class CellGenerator : MonoBehaviour
 
                 if(i == 5)
                 {
-                    // Create each cell image
-                    RectTransform cellImage = Instantiate(m_BgImage, transform);
-                    //cellImage.transform.SetParent(transform);
-
-                    // Set the size and position of each cell image
-                    //RectTransform cellRect = cellImage.GetComponent<RectTransform>();
-                    //cellRect.sizeDelta = new Vector2(100, 100);  // Adjust the size as needed
+                    RectTransform cellImage = Instantiate(m_GridBgImage, m_GridBgImageParentTransform);
                     Vector3 pos = m_CellController.GetCell(row, col).GetComponent<RectTransform>().anchoredPosition;
-                    cellImage.anchoredPosition = new Vector3(pos.x, pos.y, -1);  // Adjust the position as needed
-                    Debug.Log(m_CellController.GetCell(row, col).gameObject.name + "  " + pos);
+                    cellImage.anchoredPosition = new Vector3(pos.x, pos.y, -1);
+                    //Debug.Log(m_CellController.GetCell(row, col).gameObject.name + "  " + pos);
                 }
 
                 
             }
         }
+
+        await Task.Yield();
     }
 
 }
