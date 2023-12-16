@@ -10,15 +10,23 @@ public class CellGenerator : MonoBehaviour
 {
     [SerializeField] private Cell m_Cell;
     [SerializeField] private CellController m_CellController;
-    [SerializeField] private GridLayoutGroup m_GridLayoutGroup;
     [SerializeField] private RectTransform m_GridBgImage;
     [SerializeField] private Transform m_GridBgImageParentTransform;
 
 
     private int[,] _sudokuGrid = new int[9, 9];
+    private int _numberOfCellsCanBeInteractable;
+
 
     private void Start()
     {
+        m_CellController.OnDifficultyValue += InitilizeGame;
+
+    }
+
+    private void InitilizeGame(int playableCellsCount)
+    {
+        _numberOfCellsCanBeInteractable = playableCellsCount;
         GenerateSudokuValues();
         GenerateSudokuCells();
     }
@@ -129,9 +137,7 @@ public class CellGenerator : MonoBehaviour
 
     private void RemoveNumbers()
     {
-        int cellsToRemove = Random.Range(40, 55);
-
-        for (int i = 0; i < cellsToRemove; i++)
+        for (int i = 0; i < _numberOfCellsCanBeInteractable; i++)
         {
             int row = Random.Range(0, 9);
             int col = Random.Range(0, 9);
@@ -166,9 +172,8 @@ public class CellGenerator : MonoBehaviour
         
         RemoveNumbers();
 
-        DOVirtual.DelayedCall(0.1f, delegate
+        DOVirtual.DelayedCall(0.4f, delegate
         {
-            m_GridLayoutGroup.enabled = false;
             DetectSubgrids();
         });
     }

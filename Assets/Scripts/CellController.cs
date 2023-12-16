@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class CellController : MonoBehaviour
 {
-    public event Action<int> OnBottomNumberSelected;
+    public event Action<int> OnDifficultyValue;
 
     [SerializeField] private Cell m_SelectedCell;
     [SerializeField] private BottomNumberButton m_BottomNumberButton;
@@ -15,26 +16,21 @@ public class CellController : MonoBehaviour
     [Space]
     [SerializeField] private Button m_RestartButton;
     [SerializeField] private Button m_ValidateButton;
-    [SerializeField] private Button m_UndoButton;
+    [SerializeField] private Button m_RestartLevelButton;
 
     private Cell[,] _cells = new Cell[9 , 9];
 
 
     private void Start()
     {
-        m_RestartButton.onClick.AddListener(delegate
-        {
-
-        });
-
-
+        m_RestartButton.onClick.AddListener(RestartSudoku);
         m_ValidateButton.onClick.AddListener(ValidateCells);
+        m_RestartLevelButton.onClick.AddListener(RestartLevel);
+    }
 
-        m_UndoButton.onClick.AddListener(delegate
-        {
-
-        });
-
+    public void SetDifficulty(int value)
+    {
+        OnDifficultyValue?.Invoke(value);
     }
 
     public void AddToCellList(int row, int col, Cell cell)
@@ -99,6 +95,24 @@ public class CellController : MonoBehaviour
                 c.Validate();
             }
         }
+    }
+
+    private void RestartSudoku()
+    {
+        FindNumber(0);
+        foreach (Cell c in _cells)
+        {
+            if (c.CheckAble)
+            {
+                c.SetCellTextVisual(0, true);
+                c.SetAsHighlited(false, true);
+            }
+        }
+    }
+
+    private void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 }
