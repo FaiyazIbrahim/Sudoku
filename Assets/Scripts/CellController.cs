@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
@@ -8,7 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class CellController : MonoBehaviour
 {
-    public event Action<int> OnDifficultyValue;
+    public event Action<int> OnGameStarted;
+    public event Action<bool> OnGameMatched;
 
     [SerializeField] private Cell m_SelectedCell;
     [SerializeField] private BottomNumberButton m_BottomNumberButton;
@@ -19,6 +18,7 @@ public class CellController : MonoBehaviour
     [SerializeField] private Button m_RestartLevelButton;
 
     private Cell[,] _cells = new Cell[9 , 9];
+    private bool _SudokuMatched = true;
 
 
     private void Start()
@@ -30,7 +30,7 @@ public class CellController : MonoBehaviour
 
     public void SetDifficulty(int value)
     {
-        OnDifficultyValue?.Invoke(value);
+        OnGameStarted?.Invoke(value);
     }
 
     public void AddToCellList(int row, int col, Cell cell)
@@ -85,15 +85,28 @@ public class CellController : MonoBehaviour
         await Task.Yield();
     }
 
-
+ 
     private void ValidateCells()
     {
+        _SudokuMatched = true;
         foreach (Cell c in _cells)
         {
             if(c.CheckAble)
             {
-                c.Validate();
+                c.Validate(delegate
+                {
+                    _SudokuMatched = false;
+                });
             }
+        }
+
+        if(_SudokuMatched)
+        {
+            OnGameMatched?.Invoke(true);
+        }
+        else
+        {
+            OnGameMatched?.Invoke(false);
         }
     }
 
@@ -110,9 +123,22 @@ public class CellController : MonoBehaviour
         }
     }
 
-    private void RestartLevel()
+    public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    //test
+    [ContextMenu("MATCH ALL")]
+    private void DebugMatchAll()
+    {
+        foreach (Cell c in _cells)
+        {
+            if (c.CheckAble)
+            {
+                c.DebugMatch();
+            }
+        }
     }
 
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using System;
 
 public class Cell : MonoBehaviour
 {
@@ -53,12 +54,17 @@ public class Cell : MonoBehaviour
 
     public int GetCurrentValue() => _currentValue;
 
-    public void Validate()
+    public void Validate(Action OnFailed = null)
     {
-        if(_targetValue != _currentValue && _currentValue != 0)
+        if (_targetValue != _currentValue && _currentValue != 0)
         {
             m_Button.image.color = m_MissMatchedColor;
             PopEffect();
+            OnFailed?.Invoke();
+        }
+        else if(_currentValue == 0)
+        {
+            OnFailed?.Invoke();
         }
     }
 
@@ -66,5 +72,11 @@ public class Cell : MonoBehaviour
     {
         transform.localScale = Vector3.one * 0.6f;
         transform.DOScale(Vector3.one, m_PopDuration).SetEase(m_PopEase);
+    }
+
+    //test
+    public void DebugMatch()
+    {
+        SetCellTextVisual(_targetValue, true);
     }
 }

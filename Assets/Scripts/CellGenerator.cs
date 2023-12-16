@@ -20,7 +20,7 @@ public class CellGenerator : MonoBehaviour
 
     private void Start()
     {
-        m_CellController.OnDifficultyValue += InitilizeGame;
+        m_CellController.OnGameStarted += InitilizeGame;
 
     }
 
