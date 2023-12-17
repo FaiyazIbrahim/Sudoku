@@ -23,7 +23,7 @@ public class TimeController : MonoBehaviour
 
     private void StartStopTimer(bool value) => _canRunTimer = value;
 
-    void Update()
+    private void Update()
     {
         if (!_canRunTimer) return;
         _time += Time.deltaTime;

@@ -19,9 +19,7 @@ public class GameDifficultyUI : MonoBehaviour
 
     private void Start()
     {
-        //m_DifficultyButtonPanel.gameObject.SetActive(false);
         DifficultyButtonsPanelAnimation(Vector2.one);
-
         m_EasyMode.onClick.AddListener(()=> SetDifficultyMode(1));
         m_MediumMode.onClick.AddListener(()=> SetDifficultyMode(2));
         m_HardMode.onClick.AddListener(()=> SetDifficultyMode(3));
@@ -50,7 +48,6 @@ public class GameDifficultyUI : MonoBehaviour
 
     private void SetDifficultyMode(int value)
     {
-        Debug.Log(value);
         DifficultyButtonsPanelAnimation(Vector2.zero);
         TitlePanelAnimation();
         switch(value)

@@ -11,15 +11,12 @@ public class CellGenerator : MonoBehaviour
     [SerializeField] private RectTransform m_GridBgImage;
     [SerializeField] private Transform m_GridBgImageParentTransform;
 
-
     private int[,] _sudokuGrid = new int[9, 9];
     private int _numberOfCellsCanBeInteractable;
-
 
     private void Start()
     {
         m_CellController.OnGameStarted += InitilizeGame;
-
     }
 
     private void InitilizeGame(int playableCellsCount)
@@ -224,7 +221,6 @@ public class CellGenerator : MonoBehaviour
                 
             }
         }
-
         await Task.Yield();
     }
 

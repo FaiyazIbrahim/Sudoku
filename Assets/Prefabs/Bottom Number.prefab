@@ -273,5 +273,5 @@ MonoBehaviour:
   m_Value: 0
   m_Button: {fileID: 7826036949517635240}
   m_Text: {fileID: 4076445797394729483}
-  m_SelectedColor: {r: 0.41651833, g: 0.7075472, b: 0.63974786, a: 1}
+  m_SelectedColor: {r: 1, g: 0.8627451, b: 0.4745098, a: 1}
   m_DeselectedColor: {r: 1, g: 1, b: 1, a: 1}
