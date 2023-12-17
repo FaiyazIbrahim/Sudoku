@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using System;
 
 public class GameDifficultyUI : MonoBehaviour
 {

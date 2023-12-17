@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 public class ValidationUI : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class ValidationUI : MonoBehaviour
     [SerializeField] private Transform m_ValidationDone;
     [SerializeField] private Transform m_ValidationFailed;
     [SerializeField] private Button m_RestartButton;
+    [SerializeField] private TextMeshProUGUI m_TimeText;
 
     private void Start()
     {
@@ -30,7 +32,8 @@ public class ValidationUI : MonoBehaviour
         m_CanvasGroup.DOFade(1, m_CanvasGroupAlphaFadeDuration);
         m_CanvasGroup.interactable = value;
         m_CanvasGroup.blocksRaycasts = value;
-        if(!value)
+        m_TimeText.text = m_TimeController.GetTime();
+        if (!value)
         {
             DOVirtual.DelayedCall(1, delegate
             {

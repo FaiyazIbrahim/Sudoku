@@ -3,7 +3,7 @@ using TMPro;
 
 public class TimeController : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI m_TimerText;
     [SerializeField] private CellController m_CellController;
     private float _time = 0f;
     private bool _canRunTimer;
@@ -12,10 +12,13 @@ public class TimeController : MonoBehaviour
     {
         m_CellController.OnGameStarted += delegate
         {
-            _canRunTimer = true;
+            StartStopTimer(true);
         };
 
-        //m_CellController.OnGameMatched += 
+        m_CellController.OnGameMatched += delegate (bool value)
+        {
+            StartStopTimer(!value);
+        };
     }
 
     private void StartStopTimer(bool value) => _canRunTimer = value;
@@ -26,6 +29,11 @@ public class TimeController : MonoBehaviour
         _time += Time.deltaTime;
         int minutes = Mathf.FloorToInt(_time / 60f);
         int seconds = Mathf.FloorToInt(_time % 60f);
-        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        m_TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    public string GetTime()
+    {
+        return m_TimerText.text;
     }
 }

@@ -704,6 +704,7 @@ MonoBehaviour:
   m_ValidationDone: {fileID: 683228801}
   m_ValidationFailed: {fileID: 1739991243}
   m_RestartButton: {fileID: 1475878595}
+  m_TimeText: {fileID: 364586005}
 --- !u!224 &258576709 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1519831646181672649, guid: 79efa7846f0d36548afb9c1c1b0f79fb, type: 3}
@@ -1473,7 +1474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6b444d87b611324991be77d4c2de0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 2104181566}
+  m_TimerText: {fileID: 2104181566}
   m_CellController: {fileID: 637023825}
 --- !u!1 &563400621
 GameObject:
