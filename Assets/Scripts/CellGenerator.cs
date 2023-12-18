@@ -51,18 +51,12 @@ public class CellGenerator : MonoBehaviour
             if (IsSafe(row, col, numbers[num - 1]))
             {
                 _sudokuGrid[row, col] = numbers[num - 1];
-                
-
-
 
                 if (SolveSudoku())
                 {
                     return true;
                 }
-
                 _sudokuGrid[row, col] = 0;
-
-                
             }
         }
 
@@ -137,13 +131,11 @@ public class CellGenerator : MonoBehaviour
             int row = Random.Range(0, 9);
             int col = Random.Range(0, 9);
 
-
             while (_sudokuGrid[row, col] == 0)
             {
                 row = Random.Range(0, 9);
                 col = Random.Range(0, 9);
             }
-
             _sudokuGrid[row, col] = 0;
             m_CellController.GetCell(row, col).SetCellTextVisual(0 , true);
         }
@@ -189,7 +181,6 @@ public class CellGenerator : MonoBehaviour
 
     void DetectSubgrids()
     {
-        
         for (int startRow = 0; startRow < 9; startRow += 3)
         {
             for (int startCol = 0; startCol < 9; startCol += 3)
@@ -202,23 +193,18 @@ public class CellGenerator : MonoBehaviour
     
     private async void GenerateGridBgImage(int startRow, int startCol)
     {
-        //Debug.Log("Row: " + startRow + ", Col: " + startCol);
         int i = 0;
         for (int row = startRow; row < startRow + 3; row++)
         {
             for (int col = startCol; col < startCol + 3; col++)
             {
                 i++;
-
                 if(i == 5)
                 {
                     RectTransform cellImage = Instantiate(m_GridBgImage, m_GridBgImageParentTransform);
                     Vector3 pos = m_CellController.GetCell(row, col).GetComponent<RectTransform>().anchoredPosition;
                     cellImage.anchoredPosition = new Vector3(pos.x, pos.y, -1);
-                    //Debug.Log(m_CellController.GetCell(row, col).gameObject.name + "  " + pos);
                 }
-
-                
             }
         }
         await Task.Yield();
